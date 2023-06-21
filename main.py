@@ -57,9 +57,24 @@ class get_champion():
     # //*[@id="gatsby-focus-wrapper"]/div/section[2]/div[1]/div[2]/div/div[1]/div/div/div[2]
     def scrape_champion_abilities(self):
         driver.get(self.champion_url)
-        abilities = driver.find_elements(By.XPATH, '//*[@id="gatsby-focus-wrapper"]/div/section[2]/div[1]/div[2]/div/div[1]/div/div/div[2]')
+
+        abilities = {
+            'Passive' : '//*[@id="gatsby-focus-wrapper"]/div/section[2]/div[1]/div[2]/div/div[1]/div/div/div[2]/button[1]',
+            'Q' : '//*[@id="gatsby-focus-wrapper"]/div/section[2]/div[1]/div[2]/div/div[1]/div/div/div[2]/button[2]',
+            'W' : '//*[@id="gatsby-focus-wrapper"]/div/section[2]/div[1]/div[2]/div/div[1]/div/div/div[2]/button[3]',
+            'E' : '//*[@id="gatsby-focus-wrapper"]/div/section[2]/div[1]/div[2]/div/div[1]/div/div/div[2]/button[4]',
+            'R' : '//*[@id="gatsby-focus-wrapper"]/div/section[2]/div[1]/div[2]/div/div[1]/div/div/div[2]/button[5]'
+        }
+
         for ability in abilities:
-            print(ability.text)
+            driver.find_element(By.XPATH, abilities[ability]).click()
+            ability_wrapper = driver.find_element(By.XPATH, '//*[@id="gatsby-focus-wrapper"]/div/section[2]/div[1]/div[2]/div/div[1]/div/div/div[2]')
+            ability_image = ability_wrapper.find_element(By.TAG_NAME, 'img')
+            ability_text = ability_wrapper.find_element(By.TAG_NAME, 'p')
+            self.champion_abilities[ability] = ability_text.text
+            self.champion_images[ability] = ability_image.get_attribute('src')
+        
+        print(self.champion_abilities)
 
     def scrape_champion_images(self):
         pass
